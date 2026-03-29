@@ -49,33 +49,45 @@ module.exports = grammar({
     ic_message: (_) => token(/[^)\s]([^)]*[^)\s])?/),
 
     // Regular comment content: must NOT match \s*DEBUG\s*, or \s*MSG\s*,
-    // Every alternative stops before or at the comma position of a keyword match,
-    // ensuring ic_debug/msg_keyword wins longest-match when a keyword is present.
+    // Each alternative uses [^()]*(\([^)]*\)[^()]*)* as the "tail" to allow
+    // one level of nested parens like (ClearanceFinish (8)).
+    // The nested-paren tail pattern: [^()]*(\([^)]*\)[^()]*)*
+    // replaces the old plain [^)]* tail.
     ic_regular: (_) => token(choice(
       // anything not starting with D, M, or whitespace
-      /[^DMdm\s)][^)]*/,
+      /[^DMdm\s()][^()]*(\([^)]*\)[^()]*)*/,
       // whitespace-only content (empty-ish comment)
       /\s+/,
       // whitespace + non-D/M start
-      /\s+[^DMdm)][^)]*/,
-      // D but not DEBUG,  (stops before making a full EBUG\s*, match)
-      /[Dd][^Ee)][^)]*/,   /[Dd][Ee][^Bb)][^)]*/,
-      /[Dd][Ee][Bb][^Uu)][^)]*/, /[Dd][Ee][Bb][Uu][^Gg)][^)]*/,
-      /[Dd][Ee][Bb][Uu][Gg][^,\s)][^)]*/,  // DEBUG then non-comma non-space
-      /[Dd][Ee][Bb][Uu][Gg]\s+[^,)][^)]*/,  // DEBUG then space(s) then non-comma
+      /\s+[^DMdm()][^()]*(\([^)]*\)[^()]*)*/,
+      // D but not DEBUG,
+      /[Dd][^Ee()][^()]*(\([^)]*\)[^()]*)*/,
+      /[Dd][Ee][^Bb()][^()]*(\([^)]*\)[^()]*)*/,
+      /[Dd][Ee][Bb][^Uu()][^()]*(\([^)]*\)[^()]*)*/,
+      /[Dd][Ee][Bb][Uu][^Gg()][^()]*(\([^)]*\)[^()]*)*/,
+      /[Dd][Ee][Bb][Uu][Gg][^,\s()][^()]*(\([^)]*\)[^()]*)*/,
+      /[Dd][Ee][Bb][Uu][Gg]\s+[^,()][^()]*(\([^)]*\)[^()]*)*/,
       // M but not MSG,
-      /[Mm][^Ss)][^)]*/,   /[Mm][Ss][^Gg)][^)]*/,
-      /[Mm][Ss][Gg][^,\s)][^)]*/,           // MSG then non-comma non-space
-      /[Mm][Ss][Gg]\s+[^,)][^)]*/,           // MSG then space(s) then non-comma
+      /[Mm][^Ss()][^()]*(\([^)]*\)[^()]*)*/,
+      /[Mm][Ss][^Gg()][^()]*(\([^)]*\)[^()]*)*/,
+      /[Mm][Ss][Gg][^,\s()][^()]*(\([^)]*\)[^()]*)*/,
+      /[Mm][Ss][Gg]\s+[^,()][^()]*(\([^)]*\)[^()]*)*/,
       // whitespace + D but not DEBUG,
-      /\s+[Dd][^Ee)][^)]*/,   /\s+[Dd][Ee][^Bb)][^)]*/,
-      /\s+[Dd][Ee][Bb][^Uu)][^)]*/, /\s+[Dd][Ee][Bb][Uu][^Gg)][^)]*/,
-      /\s+[Dd][Ee][Bb][Uu][Gg][^,\s)][^)]*/,
-      /\s+[Dd][Ee][Bb][Uu][Gg]\s+[^,)][^)]*/,
+      /\s+[Dd][^Ee()][^()]*(\([^)]*\)[^()]*)*/,
+      /\s+[Dd][Ee][^Bb()][^()]*(\([^)]*\)[^()]*)*/,
+      /\s+[Dd][Ee][Bb][^Uu()][^()]*(\([^)]*\)[^()]*)*/,
+      /\s+[Dd][Ee][Bb][Uu][^Gg()][^()]*(\([^)]*\)[^()]*)*/,
+      /\s+[Dd][Ee][Bb][Uu][Gg][^,\s()][^()]*(\([^)]*\)[^()]*)*/,
+      /\s+[Dd][Ee][Bb][Uu][Gg]\s+[^,()][^()]*(\([^)]*\)[^()]*)*/,
       // whitespace + M but not MSG,
-      /\s+[Mm][^Ss)][^)]*/,   /\s+[Mm][Ss][^Gg)][^)]*/,
-      /\s+[Mm][Ss][Gg][^,\s)][^)]*/,
-      /\s+[Mm][Ss][Gg]\s+[^,)][^)]*/,
+      /\s+[Mm][^Ss()][^()]*(\([^)]*\)[^()]*)*/,
+      /\s+[Mm][Ss][^Gg()][^()]*(\([^)]*\)[^()]*)*/,
+      /\s+[Mm][Ss][Gg][^,\s()][^()]*(\([^)]*\)[^()]*)*/,
+      /\s+[Mm][Ss][Gg]\s+[^,()][^()]*(\([^)]*\)[^()]*)*/,
+      // content that starts with a nested paren
+      /\([^)]*\)[^()]*(\([^)]*\)[^()]*)*/,
+      // whitespace + nested paren
+      /\s+\([^)]*\)[^()]*(\([^)]*\)[^()]*)*/,
     )),
 
     keyword_comment: ($) => seq(

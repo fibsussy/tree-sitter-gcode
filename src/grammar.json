@@ -137,7 +137,7 @@
         "members": [
           {
             "type": "PATTERN",
-            "value": "[^DMdm\\s)][^)]*"
+            "value": "[^DMdm\\s()][^()]*(\\([^)]*\\)[^()]*)*"
           },
           {
             "type": "PATTERN",
@@ -145,87 +145,95 @@
           },
           {
             "type": "PATTERN",
-            "value": "\\s+[^DMdm)][^)]*"
+            "value": "\\s+[^DMdm()][^()]*(\\([^)]*\\)[^()]*)*"
           },
           {
             "type": "PATTERN",
-            "value": "[Dd][^Ee)][^)]*"
+            "value": "[Dd][^Ee()][^()]*(\\([^)]*\\)[^()]*)*"
           },
           {
             "type": "PATTERN",
-            "value": "[Dd][Ee][^Bb)][^)]*"
+            "value": "[Dd][Ee][^Bb()][^()]*(\\([^)]*\\)[^()]*)*"
           },
           {
             "type": "PATTERN",
-            "value": "[Dd][Ee][Bb][^Uu)][^)]*"
+            "value": "[Dd][Ee][Bb][^Uu()][^()]*(\\([^)]*\\)[^()]*)*"
           },
           {
             "type": "PATTERN",
-            "value": "[Dd][Ee][Bb][Uu][^Gg)][^)]*"
+            "value": "[Dd][Ee][Bb][Uu][^Gg()][^()]*(\\([^)]*\\)[^()]*)*"
           },
           {
             "type": "PATTERN",
-            "value": "[Dd][Ee][Bb][Uu][Gg][^,\\s)][^)]*"
+            "value": "[Dd][Ee][Bb][Uu][Gg][^,\\s()][^()]*(\\([^)]*\\)[^()]*)*"
           },
           {
             "type": "PATTERN",
-            "value": "[Dd][Ee][Bb][Uu][Gg]\\s+[^,)][^)]*"
+            "value": "[Dd][Ee][Bb][Uu][Gg]\\s+[^,()][^()]*(\\([^)]*\\)[^()]*)*"
           },
           {
             "type": "PATTERN",
-            "value": "[Mm][^Ss)][^)]*"
+            "value": "[Mm][^Ss()][^()]*(\\([^)]*\\)[^()]*)*"
           },
           {
             "type": "PATTERN",
-            "value": "[Mm][Ss][^Gg)][^)]*"
+            "value": "[Mm][Ss][^Gg()][^()]*(\\([^)]*\\)[^()]*)*"
           },
           {
             "type": "PATTERN",
-            "value": "[Mm][Ss][Gg][^,\\s)][^)]*"
+            "value": "[Mm][Ss][Gg][^,\\s()][^()]*(\\([^)]*\\)[^()]*)*"
           },
           {
             "type": "PATTERN",
-            "value": "[Mm][Ss][Gg]\\s+[^,)][^)]*"
+            "value": "[Mm][Ss][Gg]\\s+[^,()][^()]*(\\([^)]*\\)[^()]*)*"
           },
           {
             "type": "PATTERN",
-            "value": "\\s+[Dd][^Ee)][^)]*"
+            "value": "\\s+[Dd][^Ee()][^()]*(\\([^)]*\\)[^()]*)*"
           },
           {
             "type": "PATTERN",
-            "value": "\\s+[Dd][Ee][^Bb)][^)]*"
+            "value": "\\s+[Dd][Ee][^Bb()][^()]*(\\([^)]*\\)[^()]*)*"
           },
           {
             "type": "PATTERN",
-            "value": "\\s+[Dd][Ee][Bb][^Uu)][^)]*"
+            "value": "\\s+[Dd][Ee][Bb][^Uu()][^()]*(\\([^)]*\\)[^()]*)*"
           },
           {
             "type": "PATTERN",
-            "value": "\\s+[Dd][Ee][Bb][Uu][^Gg)][^)]*"
+            "value": "\\s+[Dd][Ee][Bb][Uu][^Gg()][^()]*(\\([^)]*\\)[^()]*)*"
           },
           {
             "type": "PATTERN",
-            "value": "\\s+[Dd][Ee][Bb][Uu][Gg][^,\\s)][^)]*"
+            "value": "\\s+[Dd][Ee][Bb][Uu][Gg][^,\\s()][^()]*(\\([^)]*\\)[^()]*)*"
           },
           {
             "type": "PATTERN",
-            "value": "\\s+[Dd][Ee][Bb][Uu][Gg]\\s+[^,)][^)]*"
+            "value": "\\s+[Dd][Ee][Bb][Uu][Gg]\\s+[^,()][^()]*(\\([^)]*\\)[^()]*)*"
           },
           {
             "type": "PATTERN",
-            "value": "\\s+[Mm][^Ss)][^)]*"
+            "value": "\\s+[Mm][^Ss()][^()]*(\\([^)]*\\)[^()]*)*"
           },
           {
             "type": "PATTERN",
-            "value": "\\s+[Mm][Ss][^Gg)][^)]*"
+            "value": "\\s+[Mm][Ss][^Gg()][^()]*(\\([^)]*\\)[^()]*)*"
           },
           {
             "type": "PATTERN",
-            "value": "\\s+[Mm][Ss][Gg][^,\\s)][^)]*"
+            "value": "\\s+[Mm][Ss][Gg][^,\\s()][^()]*(\\([^)]*\\)[^()]*)*"
           },
           {
             "type": "PATTERN",
-            "value": "\\s+[Mm][Ss][Gg]\\s+[^,)][^)]*"
+            "value": "\\s+[Mm][Ss][Gg]\\s+[^,()][^()]*(\\([^)]*\\)[^()]*)*"
+          },
+          {
+            "type": "PATTERN",
+            "value": "\\([^)]*\\)[^()]*(\\([^)]*\\)[^()]*)*"
+          },
+          {
+            "type": "PATTERN",
+            "value": "\\s+\\([^)]*\\)[^()]*(\\([^)]*\\)[^()]*)*"
           }
         ]
       }
