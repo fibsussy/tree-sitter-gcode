@@ -392,6 +392,29 @@
     }
   },
   {
+    "type": "h_word",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "number",
+          "named": true
+        },
+        {
+          "type": "parameter_word",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "if_statement",
     "named": true,
     "fields": {
@@ -1182,6 +1205,10 @@
         },
         {
           "type": "g_word",
+          "named": true
+        },
+        {
+          "type": "h_word",
           "named": true
         },
         {

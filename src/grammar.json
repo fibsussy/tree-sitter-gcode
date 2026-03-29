@@ -608,6 +608,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "h_word"
+        },
+        {
+          "type": "SYMBOL",
           "name": "other_word"
         }
       ]
@@ -674,9 +678,13 @@
       "type": "PATTERN",
       "value": "[rR]"
     },
+    "_h_identifier": {
+      "type": "PATTERN",
+      "value": "[hH]"
+    },
     "_other_word_identifier": {
       "type": "PATTERN",
-      "value": "[dDhHlLqQ]"
+      "value": "[dDlLqQ]"
     },
     "axis_identifier": {
       "type": "PATTERN",
@@ -1015,6 +1023,31 @@
           {
             "type": "SYMBOL",
             "name": "_r_identifier"
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_word_code"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "h_word": {
+      "type": "PREC_LEFT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "_h_identifier"
           },
           {
             "type": "CHOICE",

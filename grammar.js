@@ -146,6 +146,7 @@ module.exports = grammar({
         $.spindle_select,
         $.arc_word,
         $.r_word,
+        $.h_word,
         $.other_word,
       ),
 
@@ -157,7 +158,8 @@ module.exports = grammar({
     _o_word_identifier: (_) => caseInsensitive('o'),
     _arc_identifier: (_) => /[iIjJkK]/,
     _r_identifier: (_) => /[rR]/,
-    _other_word_identifier: (_) => /[dDhHlLqQ]/,
+    _h_identifier: (_) => /[hH]/,
+    _other_word_identifier: (_) => /[dDlLqQ]/,
     axis_identifier: (_) => /[xXyYzZaAbBcCuUvVwWeE]/,
     parameter_identifier: (_) => /[pP#]/,
     property_name: (_) => token(seq('<', /[a-zA-Z0-9_-]*/, '>')),
@@ -216,6 +218,9 @@ module.exports = grammar({
 
     r_word: ($) =>
       prec.left(seq($._r_identifier, optional($._word_code))),
+
+    h_word: ($) =>
+      prec.left(seq($._h_identifier, optional($._word_code))),
 
     other_word: ($) =>
       prec.left(seq($._other_word_identifier, optional($._word_code))),
