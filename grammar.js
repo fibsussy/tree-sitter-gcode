@@ -39,7 +39,26 @@ module.exports = grammar({
 
     _end_of_line: ($) => choice(/\n/, /\r\n/, /\r/, $.eol_comment),
 
-    inline_comment: (_) => token(seq('(', /[^\)]*/, ')')),
+    // Captures DEBUG, MSG, and other keywords inside inline comments
+    inline_comment: ($) => seq(
+      '(',
+      optional(/\s*/),
+      choice(
+        seq(
+          field('keyword', choice($.debug_keyword, $.msg_keyword)),
+          ',',
+          field('message', /[^\)]+/),
+        ),
+        /[^\)]+/,
+      ),
+      ')',
+    ),
+
+    // DEBUG in comments - sends message to operator
+    debug_keyword: (_) => token(seq(caseInsensitive('DEBUG'))),
+    
+    // MSG in comments - same as DEBUG
+    msg_keyword: (_) => token(seq(caseInsensitive('MSG'))),
 
     eol_comment: (_) => token(seq(';', /.*/)),
 
