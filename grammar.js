@@ -30,11 +30,25 @@ module.exports = grammar({
   rules: {
     source_file: ($) =>
       choice(
-        seq($._marker, repeat($._statement), $._marker),
-        repeat($._statement),
+        seq(
+          optional($.outside_program),
+          $.program_marker,
+          $.program,
+          $.program_marker,
+          optional($.outside_program),
+        ),
+        $.program,
       ),
 
-    _marker: (_) => token('%'),
+    program: ($) => repeat1($._statement),
+
+    // Named % marker — separate token, never inside program
+    program_marker: (_) => token(seq('%', /\r?\n?/)),
+
+    // Content outside the % markers — one contiguous block of non-% text
+    outside_program: (_) => token(/[^%]+/),
+
+
 
     _statement: ($) => choice($.line, $.unsigned_integer, $.eol_comment, $.inline_comment),
 

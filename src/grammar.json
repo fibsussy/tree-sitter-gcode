@@ -9,36 +9,77 @@
           "type": "SEQ",
           "members": [
             {
-              "type": "SYMBOL",
-              "name": "_marker"
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "outside_program"
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
             },
             {
-              "type": "REPEAT",
-              "content": {
-                "type": "SYMBOL",
-                "name": "_statement"
-              }
+              "type": "SYMBOL",
+              "name": "program_marker"
             },
             {
               "type": "SYMBOL",
-              "name": "_marker"
+              "name": "program"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "program_marker"
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "outside_program"
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
             }
           ]
         },
         {
-          "type": "REPEAT",
-          "content": {
-            "type": "SYMBOL",
-            "name": "_statement"
-          }
+          "type": "SYMBOL",
+          "name": "program"
         }
       ]
     },
-    "_marker": {
+    "program": {
+      "type": "REPEAT1",
+      "content": {
+        "type": "SYMBOL",
+        "name": "_statement"
+      }
+    },
+    "program_marker": {
       "type": "TOKEN",
       "content": {
-        "type": "STRING",
-        "value": "%"
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "%"
+          },
+          {
+            "type": "PATTERN",
+            "value": "\\r?\\n?"
+          }
+        ]
+      }
+    },
+    "outside_program": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "[^%]+"
       }
     },
     "_statement": {

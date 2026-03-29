@@ -882,6 +882,33 @@
     }
   },
   {
+    "type": "program",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "eol_comment",
+          "named": true
+        },
+        {
+          "type": "inline_comment",
+          "named": true
+        },
+        {
+          "type": "line",
+          "named": true
+        },
+        {
+          "type": "unsigned_integer",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "r_word",
     "named": true,
     "fields": {},
@@ -976,22 +1003,18 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
-          "type": "eol_comment",
+          "type": "outside_program",
           "named": true
         },
         {
-          "type": "inline_comment",
+          "type": "program",
           "named": true
         },
         {
-          "type": "line",
-          "named": true
-        },
-        {
-          "type": "unsigned_integer",
+          "type": "program_marker",
           "named": true
         }
       ]
@@ -1267,10 +1290,6 @@
     "named": false
   },
   {
-    "type": "%",
-    "named": false
-  },
-  {
     "type": "(",
     "named": false
   },
@@ -1515,7 +1534,15 @@
     "named": false
   },
   {
+    "type": "outside_program",
+    "named": true
+  },
+  {
     "type": "parameter_identifier",
+    "named": true
+  },
+  {
+    "type": "program_marker",
     "named": true
   },
   {
