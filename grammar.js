@@ -18,12 +18,13 @@ const PREC = {
 module.exports = grammar({
   name: 'gcode',
 
-  extras: ($) => [/\s/, $.inline_comment],
+  extras: ($) => [/\s/],
 
   conflicts: ($) => [
     [$._fanuc_o_word, $.direct_label],
     [$.o_word, $.subroutine_block],
     [$._while_loop, $._do_while_loop],
+    [$._statement, $.line],
   ],
 
   rules: {
@@ -35,40 +36,78 @@ module.exports = grammar({
 
     _marker: (_) => token('%'),
 
-    _statement: ($) => choice($.line, $.unsigned_integer, $.eol_comment),
+    _statement: ($) => choice($.line, $.unsigned_integer, $.eol_comment, $.inline_comment),
 
     _end_of_line: ($) => choice(/\n/, /\r\n/, /\r/, $.eol_comment),
 
-    // Captures DEBUG, MSG, and other keywords inside inline comments
-    inline_comment: ($) => seq(
+    // Keyword tokens include leading \s* and \s*,\s* so they are longer than any
+    // ic_regular alternative that stops before the comma.
+    ic_debug_keyword: (_) => token(seq(/\s*/, /[Dd][Ee][Bb][Uu][Gg]/, /\s*,\s*/)),
+    ic_msg_keyword:   (_) => token(seq(/\s*/, /[Mm][Ss][Gg]/,         /\s*,\s*/)),
+
+    // Message: trim surrounding whitespace — starts and ends on non-whitespace non-)
+    ic_message: (_) => token(/[^)\s]([^)]*[^)\s])?/),
+
+    // Regular comment content: must NOT match \s*DEBUG\s*, or \s*MSG\s*,
+    // Every alternative stops before or at the comma position of a keyword match,
+    // ensuring ic_debug/msg_keyword wins longest-match when a keyword is present.
+    ic_regular: (_) => token(choice(
+      // anything not starting with D, M, or whitespace
+      /[^DMdm\s)][^)]*/,
+      // whitespace-only content (empty-ish comment)
+      /\s+/,
+      // whitespace + non-D/M start
+      /\s+[^DMdm)][^)]*/,
+      // D but not DEBUG,  (stops before making a full EBUG\s*, match)
+      /[Dd][^Ee)][^)]*/,   /[Dd][Ee][^Bb)][^)]*/,
+      /[Dd][Ee][Bb][^Uu)][^)]*/, /[Dd][Ee][Bb][Uu][^Gg)][^)]*/,
+      /[Dd][Ee][Bb][Uu][Gg][^,\s)][^)]*/,  // DEBUG then non-comma non-space
+      /[Dd][Ee][Bb][Uu][Gg]\s+[^,)][^)]*/,  // DEBUG then space(s) then non-comma
+      // M but not MSG,
+      /[Mm][^Ss)][^)]*/,   /[Mm][Ss][^Gg)][^)]*/,
+      /[Mm][Ss][Gg][^,\s)][^)]*/,           // MSG then non-comma non-space
+      /[Mm][Ss][Gg]\s+[^,)][^)]*/,           // MSG then space(s) then non-comma
+      // whitespace + D but not DEBUG,
+      /\s+[Dd][^Ee)][^)]*/,   /\s+[Dd][Ee][^Bb)][^)]*/,
+      /\s+[Dd][Ee][Bb][^Uu)][^)]*/, /\s+[Dd][Ee][Bb][Uu][^Gg)][^)]*/,
+      /\s+[Dd][Ee][Bb][Uu][Gg][^,\s)][^)]*/,
+      /\s+[Dd][Ee][Bb][Uu][Gg]\s+[^,)][^)]*/,
+      // whitespace + M but not MSG,
+      /\s+[Mm][^Ss)][^)]*/,   /\s+[Mm][Ss][^Gg)][^)]*/,
+      /\s+[Mm][Ss][Gg][^,\s)][^)]*/,
+      /\s+[Mm][Ss][Gg]\s+[^,)][^)]*/,
+    )),
+
+    keyword_comment: ($) => seq(
       '(',
-      optional(/\s*/),
-      choice(
-        seq(
-          field('keyword', choice($.debug_keyword, $.msg_keyword)),
-          ',',
-          field('message', /[^\)]+/),
-        ),
-        /[^\)]+/,
-      ),
+      field('keyword', choice($.ic_debug_keyword, $.ic_msg_keyword)),
+      field('message', $.ic_message),
       ')',
     ),
 
-    // DEBUG in comments - sends message to operator
-    debug_keyword: (_) => token(seq(caseInsensitive('DEBUG'))),
-    
-    // MSG in comments - same as DEBUG
-    msg_keyword: (_) => token(seq(caseInsensitive('MSG'))),
+    regular_comment: ($) => seq(
+      '(',
+      optional(field('content', $.ic_regular)),
+      ')',
+    ),
 
-    eol_comment: (_) => token(seq(';', /.*/)),
+    inline_comment: ($) => choice(
+      $.keyword_comment,
+      $.regular_comment,
+    ),
+
+    // EOL comment: ; followed by named content node
+    eol_comment_content: (_) => /.*/,
+    eol_comment: ($) => seq(';', $.eol_comment_content),
 
     line: ($) =>
       prec(
         2,
         seq(
           optional($.line_number),
-          repeat1($.word),
+          repeat1(choice($.word, $.inline_comment)),
           optional($.checksum),
+          optional($.inline_comment),
           optional($.eol_comment),
           $._end_of_line,
         ),
