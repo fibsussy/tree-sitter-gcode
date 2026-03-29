@@ -600,6 +600,14 @@
         },
         {
           "type": "SYMBOL",
+          "name": "arc_word"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "r_word"
+        },
+        {
+          "type": "SYMBOL",
           "name": "other_word"
         }
       ]
@@ -658,9 +666,17 @@
       "named": false,
       "value": "o"
     },
+    "_arc_identifier": {
+      "type": "PATTERN",
+      "value": "[iIjJkK]"
+    },
+    "_r_identifier": {
+      "type": "PATTERN",
+      "value": "[rR]"
+    },
     "_other_word_identifier": {
       "type": "PATTERN",
-      "value": "[dDhHiIjJkKlLqQrR]"
+      "value": "[dDhHlLqQ]"
     },
     "axis_identifier": {
       "type": "PATTERN",
@@ -964,6 +980,56 @@
           "name": "_word_code"
         }
       ]
+    },
+    "arc_word": {
+      "type": "PREC_LEFT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "_arc_identifier"
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_word_code"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "r_word": {
+      "type": "PREC_LEFT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "_r_identifier"
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_word_code"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          }
+        ]
+      }
     },
     "other_word": {
       "type": "PREC_LEFT",

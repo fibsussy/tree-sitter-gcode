@@ -144,6 +144,8 @@ module.exports = grammar({
         $.polar_distance,
         $.polar_angle,
         $.spindle_select,
+        $.arc_word,
+        $.r_word,
         $.other_word,
       ),
 
@@ -153,7 +155,9 @@ module.exports = grammar({
     _t_word_identifier: (_) => caseInsensitive('t'),
     _s_word_identifier: (_) => caseInsensitive('s'),
     _o_word_identifier: (_) => caseInsensitive('o'),
-    _other_word_identifier: (_) => /[dDhHiIjJkKlLqQrR]/,
+    _arc_identifier: (_) => /[iIjJkK]/,
+    _r_identifier: (_) => /[rR]/,
+    _other_word_identifier: (_) => /[dDhHlLqQ]/,
     axis_identifier: (_) => /[xXyYzZaAbBcCuUvVwWeE]/,
     parameter_identifier: (_) => /[pP#]/,
     property_name: (_) => token(seq('<', /[a-zA-Z0-9_-]*/, '>')),
@@ -206,6 +210,12 @@ module.exports = grammar({
         '=',
         $._word_code,
       ),
+
+    arc_word: ($) =>
+      prec.left(seq($._arc_identifier, optional($._word_code))),
+
+    r_word: ($) =>
+      prec.left(seq($._r_identifier, optional($._word_code))),
 
     other_word: ($) =>
       prec.left(seq($._other_word_identifier, optional($._word_code))),
